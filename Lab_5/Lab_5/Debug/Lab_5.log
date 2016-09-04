@@ -1,0 +1,15 @@
+﻿Build started 9/4/2016 9:36:51 AM.
+     1>Project "S:\OSU\Fall 2015\RTR 5542\Lab 5\Lab_5\Lab_5\Lab_5.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\USER\Desktop\Fall 2015\RTR 5542\ply" /IC:\glm /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt display.cpp plyread.cpp shaderSetup.cpp
+         shaderSetup.cpp
+         plyread.cpp
+     1>s:\osu\fall 2015\rtr 5542\lab 5\lab_5\lab_5\plyread.cpp(17): fatal error C1083: Cannot open include file: 'ply.h': No such file or directory
+         display.cpp
+     1>s:\osu\fall 2015\rtr 5542\lab 5\lab_5\lab_5\display.cpp(6): fatal error C1083: Cannot open include file: 'ply.h': No such file or directory
+         Generating Code...
+     1>Done Building Project "S:\OSU\Fall 2015\RTR 5542\Lab 5\Lab_5\Lab_5\Lab_5.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:07.72

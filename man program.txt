@@ -1,0 +1,334 @@
+void initSphere(int nslices, int nstacks) {
+	nvertices = nslices*nstacks;
+	nindices = 2 * (nstacks - 1)*(nslices + 1); //+1 for completing circle, -1 because endpoints only once
+	vertices = new Vertex[nvertices];
+	tindices = new GLuint[nindices];
+	float dangle = 2 * MATH_PI / (float)(nslices);
+
+	//vertices
+	for (int j = 0; j < nstacks; j++) {
+		for (int i = 0; i < nslices; i++) {
+			float angle = i*dangle;
+			int id = j*nslices + i;
+			vertices[id].loc[1] = (j*1.0 / (float)(nstacks - 1)) - 0.5;
+			float var = vertices[id].loc[1];
+			float r = sqrt(0.25 - (var*var));
+			vertices[id].loc[0] = r* cos(angle);
+			vertices[id].loc[2] = r*sin(angle);
+			vertices[id].loc[3] = 1.0f;
+			vertices[id].col[0] = 1;
+			vertices[id].col[1] = 0.3;
+			vertices[id].col[2] = 0;
+			vertices[id].normal[1] = 0.0f;
+			vertices[id].normal[0] = cos(angle);
+			vertices[id].normal[2] = sin(angle);
+			vertices[id].normal[3] = 0.0f;
+		}
+	}
+	//indices
+	int n = 0;
+	for (int j = 0; j < nstacks - 1; j++) {
+		for (int i = 0; i < nslices + 1; i++) {
+			int mi = i % nslices;
+			int idx = j*nslices + mi; // mesh[j][mi] 
+			int idx2 = (j + 1) * nslices + mi;
+			tindices[n++] = idx;
+			tindices[n++] = idx2;
+		}
+	}
+
+}
+
+
+void initCylinder(int nslices, int nstacks) {
+	nvertices = nslices*nstacks;
+	nindices = 2 * (nstacks - 1)*(nslices + 1); //+1 for completing circle, -1 because endpoints only once
+	vertices2 = new Vertex[nvertices];
+	tindices2 = new GLuint[nindices];
+	float dangle = 2 * MATH_PI / (float)(nslices);
+
+	//vertices
+	for (int j = 0; j < nstacks; j++) {
+		for (int i = 0; i < nslices; i++) {
+			float angle = i*dangle;
+			int id = j*nslices + i;
+			vertices2[id].loc[1] = (j*1.0 / (float)(nstacks - 1)) - 0.5;
+			vertices2[id].loc[0] = cos(angle);
+			vertices2[id].loc[2] = sin(angle);
+			vertices2[id].loc[3] = 1.0;
+			vertices2[id].col[0] = 0.9;
+			vertices2[id].col[1] = 1;
+			vertices2[id].col[2] = 0;
+			vertices2[id].normal[1] = 0.0f;
+			vertices2[id].normal[0] = cos(angle);
+			vertices2[id].normal[2] = sin(angle);
+			vertices2[id].normal[3] = 0.0f;
+		}
+	}
+	//indices
+	int n = 0;
+	for (int j = 0; j < nstacks - 1; j++) {
+		for (int i = 0; i < nslices + 1; i++) {
+			int mi = i % nslices;
+			int idx = j*nslices + mi; // mesh[j][mi] 
+			int idx2 = (j + 1) * nslices + mi;
+			tindices2[n++] = idx;
+			tindices2[n++] = idx2;
+		}
+	}
+}
+void initEyes(int nslices, int nstacks) {
+	nvertices = nslices*nstacks;
+	nindices = 2 * (nstacks - 1)*(nslices + 1); //+1 for completing circle, -1 because endpoints only once
+	vertices3 = new Vertex[nvertices];
+	tindices3 = new GLuint[nindices];
+	float dangle = 2 * MATH_PI / (float)(nslices);
+
+	//vertices
+	for (int j = 0; j < nstacks; j++) {
+		for (int i = 0; i < nslices; i++) {
+			float angle = i*dangle;
+			int id = j*nslices + i;
+			vertices3[id].loc[1] = (j*1.0 / (float)(nstacks - 1)) - 0.5;
+			float var = vertices3[id].loc[1];
+			float r = sqrt(0.25 - (var*var));
+			vertices3[id].loc[0] = r* cos(angle);
+			vertices3[id].loc[2] = r*sin(angle);
+			vertices3[id].loc[3] = 1.0f;
+			vertices3[id].col[0] = 1;
+			vertices3[id].col[1] = 1;
+			vertices3[id].col[2] = 1;
+			vertices3[id].normal[1] = 0.0f;
+			vertices3[id].normal[0] = cos(angle);
+			vertices3[id].normal[2] = sin(angle);
+			vertices3[id].normal[3] = 0.0f;
+		}
+	}
+	//indices
+	int n = 0;
+	for (int j = 0; j < nstacks - 1; j++) {
+		for (int i = 0; i < nslices + 1; i++) {
+			int mi = i % nslices;
+			int idx = j*nslices + mi; // mesh[j][mi] 
+			int idx2 = (j + 1) * nslices + mi;
+			tindices3[n++] = idx;
+			tindices3[n++] = idx2;
+		}
+	}
+
+}
+
+
+////////////////////////////////////////////////////////////this
+void initMan() {
+	initSphere();
+	initCylinder();
+	initEyes();
+}
+
+
+
+void onScreen(glm::mat4* model) {
+	glPointSize(5);
+	glColor3f(1, 0, 0);
+
+	glm::mat4 projection = glm::perspective(30.0f, 1.0f, 0.1f, 100.0f); //y co-ordinate is in the opposite direction. Why?
+																		//glMatrixMode(GL_PROJECTION);
+																		//glLoadMatrixf(&projection[0][0]);
+
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0, 0.0, 5.0),
+		glm::vec3(0.0, 0.0, 0.0),
+		glm::vec3(0.0, 1.0, 0.0));
+
+	// construct the modelview and modelview projection matrices 
+	glm::mat4 modelview = view * *model;
+	glm::mat4 mvp = projection*modelview;
+	glLoadMatrixf(&mvp[0][0]);
+
+	glDrawElements(GL_TRIANGLE_STRIP, nindices, GL_UNSIGNED_INT, (char*)NULL + 0);
+}
+
+
+void sphere(glm::mat4 *model) {
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboHandle[0]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO[0]);
+	// the following code tells OpenGL how to walk through the vertex array 
+	glVertexPointer(4, GL_FLOAT, sizeof(Vertex), 0); //number of coordinates per vertex, type of the coordinates, 
+													 // stride between consecutive vertices, and pointers to the first coordinate
+	glColorPointer(3, GL_FLOAT, sizeof(Vertex), (char*)NULL + 16);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (char*)NULL + 28);
+
+	cout << "*";
+	onScreen(model);
+}
+void eyes(glm::mat4 *model) {
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboHandle[2]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO[2]);
+	// the following code tells OpenGL how to walk through the vertex array 
+	glVertexPointer(4, GL_FLOAT, sizeof(Vertex), 0); //number of coordinates per vertex, type of the coordinates, 
+													 // stride between consecutive vertices, and pointers to the first coordinate
+	glColorPointer(3, GL_FLOAT, sizeof(Vertex), (char*)NULL + 16);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (char*)NULL + 28);
+
+	cout << "*";
+	onScreen(model);
+}
+void balloons(glm::mat4 *model) {
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboHandle[3]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO[3]);
+	// the following code tells OpenGL how to walk through the vertex array 
+	glVertexPointer(4, GL_FLOAT, sizeof(Vertex), 0); //number of coordinates per vertex, type of the coordinates, 
+													 // stride between consecutive vertices, and pointers to the first coordinate
+	glColorPointer(3, GL_FLOAT, sizeof(Vertex), (char*)NULL + 16);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (char*)NULL + 28);
+
+	cout << "*";
+	onScreen(model);
+}
+void cylinder(glm::mat4 *model) {
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboHandle[1]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO[1]);
+	glVertexPointer(4, GL_FLOAT, sizeof(Vertex), 0); //number of coordinates per vertex, type of the coordinates, 
+													 // stride between consecutive vertices, and pointers to the first coordinate
+	glColorPointer(3, GL_FLOAT, sizeof(Vertex), (char*)NULL + 16);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (char*)NULL + 28);
+
+	cout << "*";
+	onScreen(model);
+}
+
+
+
+
+
+
+
+//////////////////////////////////////////this
+void createMan() {
+
+	model = glm::rotate(model, angle_r, glm::vec3(0, 1, 0));
+	model = glm::translate(model, glm::vec3(0, (jump - 1)*-2.0, 0));
+	model = glm::translate(model, glm::vec3(tx, ty, tz));
+	mat_stack.push(model);
+
+	model = glm::scale(model, glm::vec3(0.5, 1.0, 0.5));
+	cylinder(&model);	//body (1)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, -1.0*jump, 0));
+	mat_stack.push(model);
+	sphere(&model);		//head (1)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0.15, -0.1, 0.4));
+	model = glm::scale(model, glm::vec3(0.4, 0.4, 0.2));
+	eyes(&model);
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(-0.15, -0.1, 0.4));
+	model = glm::scale(model, glm::vec3(0.4, 0.4, 0.2));
+	eyes(&model);
+
+	mat_stack.pop();
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0.6, -0.2, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);			//sphere (2)
+
+	model = mat_stack.top();
+	model = glm::rotate(model, (float)((jump - 1)*-7.8), glm::vec3(0, 0, 1));
+	model = glm::rotate(model, angle1, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, 0.5, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.05, 1.0, 0.05));
+	cylinder(&model);		//arm (2)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.5, 0));
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);		//sphere (3)
+
+	mat_stack.pop();
+
+	mat_stack.pop();
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(-0.6, -0.2, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);				//sphere (4)
+
+	model = mat_stack.top();
+	model = glm::rotate(model, (float)((jump - 1)*7.8), glm::vec3(0, 0, 1));
+	model = glm::rotate(model, angle2, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, 0.5, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.05, 1.0, 0.05));
+	cylinder(&model);		//arm (3)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.5, 0));
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);			//sphere (5)
+
+	mat_stack.pop();
+
+	mat_stack.pop();
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0.2, 0.6, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);				//sphere (6)
+
+	model = mat_stack.top();
+	model = glm::rotate(model, (float)((jump - 1)*-1.5), glm::vec3(0, 0, 1));
+	model = glm::rotate(model, angle3, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, 0.25, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.05, 0.5, 0.05));
+	cylinder(&model);		//leg (4)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.25, 0));
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);				//sphere (7)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.6, 0));
+	model = glm::rotate(model, angle4, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, ty4, -tz4));
+	model = glm::scale(model, glm::vec3(0.05, 0.5, 0.05));
+	cylinder(&model);		//leg (5)
+
+	mat_stack.pop();
+
+	mat_stack.pop();
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(-0.2, 0.6, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);			//sphere (8)
+
+	model = mat_stack.top();
+	model = glm::rotate(model, (float)((jump - 1)*1.5), glm::vec3(0, 0, 1));
+	model = glm::rotate(model, angle5, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, 0.25, 0));
+	mat_stack.push(model);
+	model = glm::scale(model, glm::vec3(0.05, 0.5, 0.05));
+	cylinder(&model);		//leg (6)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.25, 0));
+	model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+	sphere(&model);				//sphere (9)
+
+	model = mat_stack.top();
+	model = glm::translate(model, glm::vec3(0, 0.6, 0));
+	model = glm::rotate(model, angle6, glm::vec3(1, 0, 0));
+	model = glm::translate(model, glm::vec3(0, ty6, -tz6));
+	model = glm::scale(model, glm::vec3(0.05, 0.5, 0.05));
+	cylinder(&model);		//leg (7)}
